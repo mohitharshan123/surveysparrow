@@ -1,0 +1,21 @@
+/* Reset styles */
+
+html,
+body,
+body * {
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+    padding: 0;
+    color: inherit;
+    background-color: inherit;
+    /* border:2px solid orange; */
+}
+
+body {
+    background-image: url(pic.jpeg);
+    background-size: cover;
+    margin: 100px;
+    align-items: center;
+    justify-content: center;
+    background-position: center center;
+}

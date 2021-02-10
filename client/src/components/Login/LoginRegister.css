@@ -1,0 +1,95 @@
+ .container {
+     width: 100%;
+     padding-top: 60px;
+     padding-bottom: 100px;
+     margin-right: 50px;
+ }
+ 
+ .login-register-wrapper {
+     height: 560px;
+     width: 820px;
+     margin-left: auto;
+     margin-right: auto;
+     padding: 0 2em;
+     border-radius: 40px;
+     box-shadow: 10px 12px 17px rgba(0, 0, 0, 0.924);
+     overflow: hidden;
+     color: #ffffff;
+     background: background-color #ff4e00;
+     background-image: linear-gradient(315deg, #ff4e00 0%, #ec9f05 74%);
+ }
+ /* Nav buttons */
+ 
+ .nav-buttons {
+     width: 100%;
+     height: 100px;
+     padding-top: 40px;
+     opacity: 1;
+     margin-bottom: 3em;
+ }
+ 
+ button {
+     font-size: 1.5em;
+     margin-right: 1em;
+     border: 0px;
+     cursor: pointer;
+ }
+ 
+ button:focus {
+     outline: 0px;
+ }
+ 
+ button.active {
+     padding-bottom: 10px;
+     border-bottom: solid 2px #1059FF;
+ }
+ /* footer: forgot section */
+ 
+ .form-group input {
+     width: 100%;
+     height: 35px;
+     padding-left: 15px;
+     border: none;
+     border-radius: 5px;
+     margin-bottom: 20px;
+     background: rgba(255, 255, 255, 0.5);
+ }
+ 
+ input.submit {
+     font-weight: 700;
+     text-transform: uppercase;
+     font-size: 1em;
+     text-align: center;
+     color: rgba(255, 255, 255, 1);
+     padding: 8px 0px;
+     width: 100%;
+     height: 35px;
+     border: none;
+     box-shadow: 10px 12px 17px rgba(0, 0, 0, 0.924);
+     border-radius: 20px;
+     margin-top: 23px;
+     background-color: rgb(255, 179, 16);
+ }
+ /*Form positioning and animation */
+ 
+ form#registerform {
+     left: 500px;
+     top: -230px;
+     position: relative;
+ }
+ 
+ .forgot-panel {
+     margin-top: -300px;
+     color: gray;
+ }
+ 
+ form,
+ .forgot-panel {
+     position: relative;
+     transition: all .2s ease;
+ }
+ 
+ #loginBtn,
+ #registerBtn {
+     transition: all .2s ease;
+ }
