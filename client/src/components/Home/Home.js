@@ -55,6 +55,11 @@ function Home() {
         ? "https://url.api.stdlib.com/temporary@0.3.0/create/"
         : "https://url.api.stdlib.com/temporary@0.3.0/messages/create/";
     dispatch(createItem(url, postData.type, getData()));
+    setpostData({
+      type: "link",
+      text: "",
+      ttl: 60,
+    });
     setExpanded(false);
   };
 
