@@ -5,9 +5,11 @@ import {
     FETCH_ALL_REQUEST,
     FETCH_ALL_SUCCESS,
     FETCH_ALL_FAILURE,
+    DESTROY_SESSION
 } from "../constants/actionTypes";
 
 import * as api from "../../api/index.js";
+import { toast } from "react-toastify";
 
 
 const fetchItemsRequest = () => {
@@ -54,6 +56,14 @@ const createItemFailed = (error) => {
 };
 
 
+export const onLogout = () => {
+    return (dispatch) => {
+        dispatch({ type: DESTROY_SESSION });
+    };
+};
+
+
+
 export const getItems = () => {
     return async(dispatch) => {
         dispatch(fetchItemsRequest());
@@ -72,10 +82,12 @@ export const createItem = (urlMakeUrl, type, item) => async(dispatch) => {
     dispatch(createItemRequest());
     await api.createItem(urlMakeUrl, type, item).then(
         (res) => {
+            toast("Successfully added item");
             dispatch(createItemSuccess(res.data.data));
         },
         (error) => {
-            dispatch(createItemFailed(error));
+            toast("An error occurred, Please try again");
+            dispatch(createItemFailed({ "message": "Please try again" }));
         }
     );
 };

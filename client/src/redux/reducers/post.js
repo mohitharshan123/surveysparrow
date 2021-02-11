@@ -32,7 +32,7 @@ export default (state = initial_state, action) => {
             return {
                 ...state,
                 isLoading: false,
-                items: [],
+                items: [...state.items],
                 error: action.payload,
             };
         case FETCH_ALL_REQUEST:

@@ -5,12 +5,12 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AddIcon from "@material-ui/icons/Add";
 import "./Home.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import List from "./List/List";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { createItem, getItems, logout } from "../../redux/actions/items";
+import { createItem, getItems, onLogout } from "../../redux/actions/items";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
@@ -30,7 +30,7 @@ function Home() {
   const [postData, setpostData] = useState({
     type: "link",
     text: "",
-    ttl:60
+    ttl: 60,
   });
   const data = useSelector((state) => state.post);
   const dispatch = useDispatch();
@@ -40,9 +40,8 @@ function Home() {
       history.push("/");
       return;
     }
-    dispatch(getItems())
-  }, [history, dispatch]);
-
+    dispatch(getItems());
+  }, [history, dispatch, localStorage.getItem("token")]);
 
   const getData = () =>
     postData.type === "link"
@@ -55,14 +54,15 @@ function Home() {
       postData.type === "link"
         ? "https://url.api.stdlib.com/temporary@0.3.0/create/"
         : "https://url.api.stdlib.com/temporary@0.3.0/messages/create/";
-    dispatch(createItem(url, postData.type ,getData()));
-    if (!data.isLoading && !data.error) {
-        setExpanded(false);
-        toast("Successfully Added Item");
-    }
-    if (data.error) {
-      toast("An error occurred");
-    }
+    dispatch(createItem(url, postData.type, getData()));
+    setExpanded(false);
+  };
+
+  const logout = (e) => {
+    e.preventDefault();
+    dispatch(onLogout());
+    localStorage.clear();
+    history.push("/");
   };
 
   return (
@@ -87,9 +87,14 @@ function Home() {
           <AccordionSummary
             onClick={() => setExpanded(true)}
             expandIcon={<AddIcon className={classes.addButton} />}
-          ></AccordionSummary>
+          >
+            {" "}
+            <Button color="primary" className={classes.logout} onClick={(e)=>logout(e)}>
+              Logout
+            </Button>
+          </AccordionSummary>
           <AccordionDetails>
-            <form>
+            <form onSubmit={create}>
               <FormControl component="fieldset">
                 <RadioGroup
                   aria-label="gender"
@@ -147,12 +152,7 @@ function Home() {
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                color="primary"
-                className={classes.submit}
-                onClick={create}
-              >
+              <Button type="submit" color="primary" className={classes.submit}>
                 Create
               </Button>
             </form>

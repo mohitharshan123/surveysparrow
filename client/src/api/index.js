@@ -1,10 +1,11 @@
 import axios from "axios";
 
 export const url = "http://localhost:4021/api";
-const headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-};
-export const fetchItems = () => axios.get(`${url}/items/`, { headers });
+
+export const fetchItems = () =>
+    axios.get(`${url}/items/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
 export const createItem = (urlMakeUrl, type, newItem) =>
     axios.post(urlMakeUrl, newItem).then(({ data }) => {
         const item = {
@@ -14,8 +15,7 @@ export const createItem = (urlMakeUrl, type, newItem) =>
             ttl: newItem.ttl,
             time_created: new Date(),
         };
-        return axios.post(
-            `${url}/items/`,
-            item, { headers }
-        );
+        return axios.post(`${url}/items/`, item, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
     });
