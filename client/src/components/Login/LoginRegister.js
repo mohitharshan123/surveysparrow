@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useSpring, animated } from "react-spring";
 import "./LoginRegister.css";
-import API from "../../services/api";
+import { url } from "../../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import * as axios from "axios";
 
 const LoginRegister = () => {
   const [registrationFormStatus, setRegistartionFormStatus] = useState(false);
@@ -49,12 +50,15 @@ const LoginRegister = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const loginRes = await API.post("users/login/", { username, password });
+      const loginRes = await axios.post(`${url}/users/login/`, {
+        username,
+        password,
+      });
       if (loginRes.data?.success === 1) {
         clearInputs();
-        history.push("/home");
         localStorage.setItem("user_id", loginRes.data.user_id);
         localStorage.setItem("token", loginRes.data.token);
+        history.push("/home");
       } else {
         toast(loginRes.data?.data);
       }
@@ -71,7 +75,10 @@ const LoginRegister = () => {
   const register = async (e) => {
     e.preventDefault();
     try {
-      const registerRes = await API.post("users/", { username, password });
+      const registerRes = await axios.post(`${url}/users/`, {
+        username,
+        password,
+      });
       if (registerRes.data?.success === 1) {
         toast("Successfully Registered User");
         loginTabClicked();

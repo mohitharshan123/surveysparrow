@@ -42,7 +42,6 @@ module.exports = {
                 const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
                     expiresIn: "1h"
                 });
-                console.log(results)
                 return res.json({
                     success: 1,
                     message: "login successfully",

@@ -2,7 +2,6 @@ const pool = require("../../config/database");
 
 module.exports = {
     create: (data, callBack) => {
-        console.log(data)
         pool.query(
             `insert into item(type, key_string, link, user_id, ttl) 
                 values(?,?,?,?,?)`, [data.type, data.key_string, data.link, data.user_id, data.ttl],
@@ -10,7 +9,7 @@ module.exports = {
                 if (error) {
                     return callBack(error);
                 }
-                return callBack(null, results);
+                return callBack(null, data);
             }
         );
     },

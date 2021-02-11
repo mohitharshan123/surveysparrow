@@ -10,8 +10,6 @@ module.exports = {
             ],
             (error, results, fields) => {
                 if (error) {
-                    console.log(error);
-
                     return callBack(error);
                 }
                 return callBack(null, results);

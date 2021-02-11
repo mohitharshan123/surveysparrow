@@ -8,8 +8,10 @@ import "./Home.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import List from "./List/List";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { createItem, getItems, logout } from "../../redux/actions/items";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
   FormControl,
@@ -20,75 +22,47 @@ import {
   InputLabel,
   Button,
 } from "@material-ui/core";
-import api from "../../services/api";
 
 function Home() {
   const history = useHistory();
   const classes = useStyles();
-  const [type, setType] = useState("link");
-  const [items, setItems] = useState([]);
   const [expanded, setExpanded] = useState(false);
-  const [ttl, setttl] = useState(60);
-  const [text, setText] = useState("");
+  const [postData, setpostData] = useState({
+    type: "link",
+    text: "",
+    ttl:60
+  });
+  const data = useSelector((state) => state.post);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       history.push("/");
       return;
     }
-    async function fetchItems() {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-      const createdItems = await api.get("/items", { headers });
-      setItems(createdItems.data.items);
-    }
-    toast("Welcome");
-    fetchItems();
-  }, [history]);
+    dispatch(getItems())
+  }, [history, dispatch]);
 
-  const handleTypeChange = (e) => setType(e.target.value);
 
   const getData = () =>
-    type === "link"
-      ? { url: text, ttl: parseInt(ttl) }
-      : { message: text, ttl: parseInt(ttl) };
+    postData.type === "link"
+      ? { url: postData.text, ttl: parseInt(postData.ttl) }
+      : { message: postData.text, ttl: parseInt(postData.ttl) };
 
   const create = async (e) => {
     e.preventDefault();
     const url =
-      type === "link"
+      postData.type === "link"
         ? "https://url.api.stdlib.com/temporary@0.3.0/create/"
         : "https://url.api.stdlib.com/temporary@0.3.0/messages/create/";
-    const headers = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    };
-
-    await axios.post(url, getData()).then(({ data }) => {
-      const item = {
-        type,
-        link: type === "link" ? data.link_url : data.message_url,
-        key_string: data.key,
-        user_id: localStorage.getItem("user_id"),
-        ttl: ttl,
-        time_created: new Date(),
-      };
-      setItems([...items, item]);
-      api.post("/items", item, { headers }).then(() => {
+    dispatch(createItem(url, postData.type ,getData()));
+    if (!data.isLoading && !data.error) {
         setExpanded(false);
-        clearInputs();
-      });
-    });
-  };
-
-  const clearInputs = () => {
-    setText("");
-    setttl(60);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    history.push("/");
+        toast("Successfully Added Item");
+    }
+    if (data.error) {
+      toast("An error occurred");
+    }
   };
 
   return (
@@ -113,23 +87,17 @@ function Home() {
           <AccordionSummary
             onClick={() => setExpanded(true)}
             expandIcon={<AddIcon className={classes.addButton} />}
-          >
-            <Button
-              className={classes.logout}
-              onClick={handleLogout}
-              color="primary"
-            >
-              Logout
-            </Button>{" "}
-          </AccordionSummary>
+          ></AccordionSummary>
           <AccordionDetails>
             <form>
               <FormControl component="fieldset">
                 <RadioGroup
                   aria-label="gender"
                   name="gender1"
-                  value={type}
-                  onChange={handleTypeChange}
+                  value={postData.type}
+                  onChange={(e) =>
+                    setpostData({ ...postData, type: e.target.value })
+                  }
                 >
                   <FormControlLabel
                     value="link"
@@ -144,21 +112,25 @@ function Home() {
                 </RadioGroup>
               </FormControl>
               <FormControl className={classes.inputField}>
-                <InputLabel htmlFor="text">Enter {type}</InputLabel>
+                <InputLabel htmlFor="text">Enter {postData.type}</InputLabel>
                 <Input
                   fullWidth={true}
                   id="text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
+                  value={postData.text}
+                  onChange={(e) =>
+                    setpostData({ ...postData, text: e.target.value })
+                  }
                   aria-describedby="my-helper-text"
                 />
               </FormControl>
               <FormControl className={classes.inputField}>
                 <InputLabel htmlFor="time">Destroy in (sec)</InputLabel>
                 <Input
-                  onChange={(e) => setttl(e.target.value)}
+                  onChange={(e) =>
+                    setpostData({ ...postData, ttl: e.target.value })
+                  }
                   fullWidth={true}
-                  value={ttl}
+                  value={postData.ttl}
                   id="time"
                   type="number"
                   aria-describedby="my-helper-text"
@@ -186,7 +158,10 @@ function Home() {
             </form>
           </AccordionDetails>
         </Accordion>
-        {items ? <List items={items}></List> : "Loading..."}
+        {data.isLoading && <CircularProgress color="secondary" />}
+        {!data.isLoading && data.items?.length > 0 && (
+          <List items={data.items}></List>
+        )}
       </div>
     </div>
   );

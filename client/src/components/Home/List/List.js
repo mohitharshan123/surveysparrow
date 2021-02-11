@@ -6,7 +6,7 @@ function List({ items }) {
   return (
     <div>
       {items.map((item) => (
-          <ListItem key={item.item_id} item={item}></ListItem>
+          <ListItem key={item?.key_string} item={item}></ListItem>
       ))}
     </div>
   );
