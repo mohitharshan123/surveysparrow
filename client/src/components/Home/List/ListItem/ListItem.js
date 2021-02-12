@@ -6,12 +6,13 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { makeStyles } from "@material-ui/core/styles";
 import ExploreOffIcon from "@material-ui/icons/ExploreOff";
 
-const renderTime = (item) => {
+const renderTime = (item, classes) => {
   return (
     <div className="timer">
       <div className="value">
         {item.type === "message" ? (
           <MessageRoundedIcon
+            className={classes.icon}
             onClick={() => redirectToPage(item.link)}
           ></MessageRoundedIcon>
         ) : (
@@ -47,11 +48,17 @@ function ListItem({ item }) {
               colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
               onComplete={() => setshowCountDown(false)}
             >
-              {renderTime(item)}
+              {renderTime(item, classes)}
             </CountdownCircleTimer>
           ) : (
-            <a className={classes.expired} href={item.link} target="_blank">
-             <ExploreOffIcon></ExploreOffIcon>{"    "} {item.link}
+            <a
+              className={classes.expired}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExploreOffIcon></ExploreOffIcon>
+              {"    "} {item.link}
             </a>
           )}
         </div>
@@ -66,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "30px",
     padding: "20px",
   },
+  icon: {
+  cursor:"pointer"
+  }
 }));
 
 export default ListItem;

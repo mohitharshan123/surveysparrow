@@ -82,10 +82,11 @@ const LoginRegister = () => {
       if (registerRes.data?.success === 1) {
         toast("Successfully Registered User");
         loginTabClicked();
-        clearInputs();
       }
+      clearInputs();
     } catch (error) {
       toast("An error occurred, Please try again");
+      clearInputs();
     }
   };
 
@@ -135,6 +136,7 @@ const LoginRegister = () => {
             type="submit"
             value="submit"
             className="submit"
+            disabled={!username || !password}
           />
         </animated.form>{" "}
         <animated.form action="" id="registerform" style={registerProps}>
@@ -155,6 +157,7 @@ const LoginRegister = () => {
             type="submit"
             value="submit"
             className="submit"
+            disabled={!username || !password}
           />
         </animated.form>{" "}
       </div>{" "}

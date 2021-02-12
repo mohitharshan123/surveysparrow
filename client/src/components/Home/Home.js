@@ -21,6 +21,7 @@ import {
   FormControlLabel,
   InputLabel,
   Button,
+  FormHelperText
 } from "@material-ui/core";
 
 function Home() {
@@ -41,7 +42,7 @@ function Home() {
       return;
     }
     dispatch(getItems());
-  }, [history, dispatch, localStorage.getItem("token")]);
+  }, [history, dispatch]);
 
   const getData = () =>
     postData.type === "link"
@@ -94,7 +95,11 @@ function Home() {
             expandIcon={<AddIcon className={classes.addButton} />}
           >
             {" "}
-            <Button color="primary" className={classes.logout} onClick={(e)=>logout(e)}>
+            <Button
+              color="primary"
+              className={classes.logout}
+              onClick={(e) => logout(e)}
+            >
               Logout
             </Button>
           </AccordionSummary>
@@ -145,6 +150,9 @@ function Home() {
                   type="number"
                   aria-describedby="my-helper-text"
                 />
+                <FormHelperText id="my-helper-text">
+                  Enter a value greater than 60 secs
+                </FormHelperText>
               </FormControl>
               <Button
                 type="submit"
@@ -157,7 +165,12 @@ function Home() {
               >
                 Cancel
               </Button>
-              <Button type="submit" color="primary" className={classes.submit}>
+              <Button
+                type="submit"
+                color="primary"
+                disabled={postData.ttl < 60}
+                className={classes.submit}
+              >
                 Create
               </Button>
             </form>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const url = "http://localhost:4021/api";
+export const url = "https://surveysparrowdemo.herokuapp.com/api";
 
 export const fetchItems = () =>
     axios.get(`${url}/items/`, {
